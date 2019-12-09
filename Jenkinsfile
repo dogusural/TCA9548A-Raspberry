@@ -9,6 +9,8 @@ node('builder'){
                 dir ("SEAL")
                 {
                     git url : 'git@github.com:RiddleAndCode/S.E.A.L..git'
+                    git submodule init
+                    git submodule update
 
                     dir("build_v1")
                     {
