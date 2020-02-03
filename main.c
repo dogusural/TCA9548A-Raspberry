@@ -28,7 +28,8 @@ int main(int argc, char **argv)
 	// }
 
 	char *filename = (char*)"/dev/i2c-1";
-	char test[] = "./tests/v1_tests";
+	char se_test[] = "./tests/v1_tests";
+	char ses_test[] = "./tests/ses_tests";
  	int fd;
 
 	if ((fd = open(filename, O_RDWR)) < 0)
@@ -62,7 +63,8 @@ int main(int argc, char **argv)
 		}
 
 		printf("\n\r\t Set-up the multiplexer for i2c device on the bus # %d \n\n\r",i);
-		system(test);
+		system(se_test);
+		system(ses_test);
 
 	}
 
