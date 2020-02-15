@@ -6,6 +6,8 @@
 #include <string.h>
 #include <stdlib.h>
 #include <stdint.h>
+#include <sys/types.h> /* for pid_t */
+#include <sys/wait.h> /* for wait */
 
 #define NUMBER_OF_DEVICES 8
 
@@ -62,9 +64,40 @@ int main(int argc, char **argv)
 			return -1;
 		}
 
-		printf("\n\r\t Set-up the multiplexer for i2c device on the bus # %d \n\n\r",i);
-		system(se_test);
-		system(ses_test);
+		printf("\n\n\r\t *** Set-up the multiplexer for i2c device on the bus # %d *** \n\n\n\r",i);
+
+		pid_t pid=fork();
+		if (pid == -1)
+		{
+			exit(EXIT_FAILURE);
+		}
+		else if (pid==0)
+		{ /* child process */
+			static char *argv[]={"v1_tests",NULL,NULL};
+			execv(se_test,argv);
+			exit(127); /* only if execv fails */
+		}
+		else
+		{ /* pid!=0; parent process */
+			waitpid(pid,0,0); /* wait for child to exit */
+		}
+
+		pid=fork();
+		if (pid == -1)
+		{
+			exit(EXIT_FAILURE);
+		}
+		else if (pid==0)
+		{ /* child process */
+			static char *argv[]={"ses_test",NULL,NULL};
+			execv(ses_test,argv);
+			exit(127); /* only if execv fails */
+		}
+		else
+		{ /* pid!=0; parent process */
+			waitpid(pid,0,0); /* wait for child to exit */
+		}
+
 
 	}
 
